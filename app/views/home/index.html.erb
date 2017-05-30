@@ -1,0 +1,53 @@
+<div class="container mt-5">
+  
+  <form action = "/create_post", method = "get">
+      <div class="form-group">
+        <textarea class="form-control" rows="5" placeholder = "Input your message" name = "content"></textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+  </form>
+    
+    
+    
+</div>
+
+<div class="container">
+    <% @posts.each do |p| %>
+        <h5>작성자 : <%= p.writer %></h5>
+        <p><%= p.content %></p>
+    
+        <div class="row">
+            <% if current_user.name == p.writer %>
+                <form action = "/edit/<%=p.id%>", method = "get">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </form>
+                <form action = "/delete/<%=p.id%>", method = "get">
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
+            <% else %>
+            
+            <% end %>
+
+            <form action = "/like/<%=p.id%>" method = "get">
+                
+                <button type="submit" class="btn btn-primary">
+                    <% if current_user.is_like?(p) %>
+                        Unlike <%= p.likes.size %>    
+                    <% else %>
+                        Like <%= p.likes.size %>
+                    <% end %>
+                </button>
+                
+            </form>
+        </div>
+        
+        <% p.comments.each do |c| %>
+            <p><%= c.content %>/<%= c.writer %></p>
+        <% end %>
+        <form action = "/create_comment/<%=p.id%>", method = "get" class = "row">
+            <input type="text" class="form-control-file" cols = "30" name = "content" placeholder = "댓글을 입력하세요">
+            <button type="submit" class="btn btn-primary">댓글달기</button>
+        </form>
+    <% end %>
+</div>
+
